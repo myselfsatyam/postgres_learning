@@ -1,0 +1,22 @@
+{
+  "name": "week_18_psotgres",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "tsc -b && node dist/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@types/express": "^5.0.3",
+    "@types/pg": "^8.15.5",
+    "express": "^5.1.0",
+    "pfg": "^0.0.1",
+    "pg": "^8.16.3",
+    "typescript": "^5.9.2"
+  }
+}
