@@ -38,6 +38,11 @@ app.post("/signup", async(req, res)=>{
     const username=req.body.username;
     const password=req.body.password;
     const email=req.body.email;
+
+    const city=req.body.city;
+    const country=req.body.country;
+    const street=req.body.street;
+    const pincode=req.body.pincode;
 try{
     // const insertQuery= `INSERT INTO users (username ,email,password) VALUES ('${username}','${email}','${password}'')`;
     // this leads to SQL injection vulnerability, use parameterized queries instead
@@ -45,9 +50,15 @@ try{
 
 
     //we use this to prevent SQL injection
-    const insertQuery = `INSERT INTO users (username, email, password) VALUES ($1, $2, $3)`;
-    await pgClient2.query(insertQuery, [username, email, password]);
-  
+    const insertQuery = `INSERT INTO users (username, email, password) VALUES ($1, $2, $3) RETURNING id`;
+    const addressInsertQuery = `INSERT INTO addresses (city,country,street,pincode,user_id) VALUES ($1,$2,$3,$4,$5)`;
+
+    pgClient2.query("BEGIN;") // STart transaction
+    const response=await pgClient2.query(insertQuery, [username, email, password]);
+    const userId=response.rows[0].id;
+    const responseaddressQuery=await pgClient2.query(addressInsertQuery, [city,country,street,pincode,userId]);
+    pgClient2.query("COMMIT;") // Commit transaction
+
     res.json({
         message:"User signed up successfully",
     })
@@ -57,8 +68,6 @@ try{
         message:"Error signing up user",
     })
 }
-    
-
 })
 
 app.listen(3000);
